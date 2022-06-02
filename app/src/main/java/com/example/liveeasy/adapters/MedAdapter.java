@@ -82,7 +82,7 @@ public class MedAdapter extends RecyclerView.Adapter<MedAdapter.ListViewHolder> 
             alert.setPositiveButton("Yes", (dialog, id) -> {
                 progressDialog.show();
                 medDAO.delete(med.getKey()).addOnSuccessListener(res -> {
-                    UploadImage.deleteImageFromURL(med.getImage(), context, progressDialog);
+                    deleteFromUrl(med.getImage());
                 }).addOnFailureListener(error -> {
                     Toast.makeText(
                             context,
@@ -94,6 +94,26 @@ public class MedAdapter extends RecyclerView.Adapter<MedAdapter.ListViewHolder> 
             });
             alert.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
             alert.show();
+        }
+
+        private void deleteFromUrl(String url) {
+            StorageReference imageRef = FirebaseStorage
+                    .getInstance().getReferenceFromUrl(url);
+            imageRef.delete().addOnSuccessListener(success -> {
+                Toast.makeText(
+                        context,
+                        "Successfully deleted medicine!",
+                        Toast.LENGTH_LONG
+                ).show();
+                progressDialog.dismiss();
+            }).addOnFailureListener(error -> {
+                Toast.makeText(
+                        context,
+                        "Failed to delete medicine: " + error.getLocalizedMessage(),
+                        Toast.LENGTH_LONG
+                ).show();
+                progressDialog.dismiss();
+            });
         }
 
         private void updateMed(Medicine med) {

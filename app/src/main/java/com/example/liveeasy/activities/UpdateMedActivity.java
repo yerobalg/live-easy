@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.liveeasy.dao.MedDAO;
 import com.example.liveeasy.databinding.LayoutFormBinding;
 import com.example.liveeasy.helpers.UploadImage;
+import com.example.liveeasy.models.Medicine;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -25,6 +26,8 @@ public class UpdateMedActivity extends AppCompatActivity {
     private final MedDAO medDao = new MedDAO();
     private ProgressDialog progressDialog;
     private Bitmap bitmap;
+    private Medicine med;
+    private String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class UpdateMedActivity extends AppCompatActivity {
         binding = LayoutFormBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initProgressDialog();
+
+        key = getIntent().getStringExtra("KEY");
+        getMed();
 
         binding.uploadButton.setOnClickListener(view -> chooseImage());
         binding.submitButton.setOnClickListener(view -> update());
@@ -42,6 +48,17 @@ public class UpdateMedActivity extends AppCompatActivity {
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Just a few second...");
         progressDialog.setCancelable(false);
+    }
+
+    private void getMed() {
+        medDao.getByKey(key).addOnCompleteListener(task -> {
+            if (!task.isSuccessful())
+                return;
+            med = task.getResult().getValue(Medicine.class);
+            binding.medEditText.setText(med.getName());
+            binding.qtyEditText.setText(med.getQuantity());
+            binding.priceEditText.setText(med.getPrice());
+        });
     }
 
     private void chooseImage() {
@@ -68,9 +85,64 @@ public class UpdateMedActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (bitmap != null) {
+        String name = binding.medEditText.getText().toString();
+        String price = binding.priceEditText.getText().toString();
+        String qty = binding.qtyEditText.getText().toString();
+        String image = binding.imageEditText.getText().toString();
 
+        String validationErrMsg = "";
+        validationErrMsg = validateForm(name, price, qty, image, bitmap != null);
+
+        if (!validationErrMsg.isEmpty()) {
+            Toast.makeText(
+                    this,
+                    validationErrMsg,
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
         }
+
+        if (bitmap != null) {
+            deleteImage(name, price, qty, med.getImage(), image);
+        } else {
+            updateData(name, price, qty, med.getImage());
+        }
+    }
+
+    private String validateForm(
+            String name,
+            String price,
+            String qty,
+            String image,
+            boolean isWithImage
+    ) {
+        if (name.isEmpty() || price.isEmpty() || qty.isEmpty())
+            return "Harap isi semua data";
+        if (isWithImage && image.isEmpty())
+            return "Harap isi nama gambar";
+        return "";
+
+    }
+
+    private void deleteImage(
+            String name,
+            String price,
+            String qty,
+            String deletedImage,
+            String updatedImage
+    ) {
+        StorageReference imageRef = FirebaseStorage
+                .getInstance().getReferenceFromUrl(deletedImage);
+        imageRef.delete().addOnSuccessListener(success -> {
+            upload(name, price, qty, updatedImage);
+        }).addOnFailureListener(error -> {
+            Toast.makeText(
+                    this,
+                    "Failed to update medicine: " + error.getLocalizedMessage(),
+                    Toast.LENGTH_LONG
+            ).show();
+            progressDialog.dismiss();
+        });
     }
 
     private void upload(
@@ -91,7 +163,6 @@ public class UpdateMedActivity extends AppCompatActivity {
         UploadTask uploadTask = reference.putBytes(baos.toByteArray());
 
         uploadTask.addOnSuccessListener(taskSnapshot -> {
-
             if (taskSnapshot.getMetadata() == null) {
                 progressDialog.dismiss();
                 Toast.makeText(this, "Gagal!", Toast.LENGTH_SHORT).show();
@@ -110,7 +181,7 @@ public class UpdateMedActivity extends AppCompatActivity {
                             Toast.makeText(this, "Gagal!", Toast.LENGTH_SHORT).show();
                             return;
                         }
-//                        saveData(name, price, quantity, task.getResult().toString());
+                        updateData(name, price, quantity, task.getResult().toString());
                     });
 
         }).addOnFailureListener(error -> {
@@ -123,7 +194,28 @@ public class UpdateMedActivity extends AppCompatActivity {
         });
     }
 
-    private void updateWithImage() {
+    private void updateData(
+            String name,
+            String price,
+            String quantity,
+            String imageName
+    ) {
+        med.setName(name);
+        med.setPrice(price);
+        med.setQuantity(quantity);
+        med.setImage(imageName);
 
+        medDao.update(key, med).addOnSuccessListener(res -> {
+            Toast.makeText(
+                    this,
+                    "Successfully updated medicine",
+                    Toast.LENGTH_LONG
+            ).show();
+            startActivity(new Intent(this, MainActivity.class));
+        }).addOnFailureListener(error -> Toast.makeText(
+                this,
+                "Failed to update medicine: " + error.getLocalizedMessage(),
+                Toast.LENGTH_SHORT
+        ).show());
     }
 }
