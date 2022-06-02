@@ -1,8 +1,5 @@
 package com.example.liveeasy.dao;
 
-
-import android.util.Log;
-
 import com.example.liveeasy.models.Medicine;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;

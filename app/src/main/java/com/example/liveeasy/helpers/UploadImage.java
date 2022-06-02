@@ -56,28 +56,4 @@ public class UploadImage {
         }
     }
 
-    public static void deleteImageFromURL(
-            String url,
-            Activity context,
-            ProgressDialog progressDialog
-    ) {
-        StorageReference imageRef = FirebaseStorage
-                .getInstance().getReferenceFromUrl(url);
-        imageRef.delete().addOnSuccessListener(success -> {
-            Toast.makeText(
-                    context,
-                    "Successfully deleted medicine!",
-                    Toast.LENGTH_LONG
-            ).show();
-            progressDialog.dismiss();
-        }).addOnFailureListener(error -> {
-            Toast.makeText(
-                    context,
-                    "Failed to delete medicine: " + error.getLocalizedMessage(),
-                    Toast.LENGTH_LONG
-            ).show();
-            progressDialog.dismiss();
-        });
-    }
-
 }

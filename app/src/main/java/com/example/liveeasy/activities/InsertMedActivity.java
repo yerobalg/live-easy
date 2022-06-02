@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.liveeasy.dao.MedDAO;
 import com.example.liveeasy.databinding.LayoutFormBinding;
+import com.example.liveeasy.helpers.Timestamp;
 import com.example.liveeasy.helpers.UploadImage;
 import com.example.liveeasy.models.Medicine;
 import com.google.firebase.storage.FirebaseStorage;
@@ -60,11 +61,15 @@ public class InsertMedActivity extends AppCompatActivity {
         return "";
     }
 
+
+
     private void insert() {
         String name = binding.medEditText.getText().toString();
         String price = binding.priceEditText.getText().toString();
         String quantity = binding.qtyEditText.getText().toString();
-        String imageName = binding.imageEditText.getText().toString();
+        String imageName = Timestamp.addTimestampToImage(
+                binding.imageEditText.getText().toString()
+        );
 
         String validationErrMsg = validateForm(name, price, quantity, imageName);
         if (!validationErrMsg.isEmpty()) {
@@ -123,12 +128,12 @@ public class InsertMedActivity extends AppCompatActivity {
 
             if (taskSnapshot.getMetadata() == null) {
                 progressDialog.dismiss();
-                Toast.makeText(this, "Gagal!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (taskSnapshot.getMetadata().getReference() == null) {
                 progressDialog.dismiss();
-                Toast.makeText(this, "Gagal!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -136,7 +141,8 @@ public class InsertMedActivity extends AppCompatActivity {
                     .getDownloadUrl()
                     .addOnCompleteListener(task -> {
                         if (task.getResult() == null) {
-                            Toast.makeText(this, "Gagal!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Failed!",
+                                    Toast.LENGTH_SHORT).show();
                             return;
                         }
                         saveData(name, price, quantity, task.getResult().toString());
@@ -146,7 +152,7 @@ public class InsertMedActivity extends AppCompatActivity {
             progressDialog.dismiss();
             Toast.makeText(
                     this,
-                    "Gagal: " + error.getLocalizedMessage(),
+                    "Failed: " + error.getLocalizedMessage(),
                     Toast.LENGTH_SHORT
             ).show();
         });
@@ -170,12 +176,12 @@ public class InsertMedActivity extends AppCompatActivity {
                             new Intent(this, MainActivity.class)
                     );
                 }).addOnFailureListener(error -> {
-                    progressDialog.dismiss();
-                    Toast.makeText(
-                            this,
-                            "Failed to add medicine: " + error.getLocalizedMessage(),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                });
+            progressDialog.dismiss();
+            Toast.makeText(
+                    this,
+                    "Failed to add medicine: " + error.getLocalizedMessage(),
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
     }
 }
