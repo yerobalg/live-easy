@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "495154153254",
+    "firebase_url": "https://liveeasy-355fb-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "liveeasy-355fb",
+    "storage_bucket": "liveeasy-355fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495154153254:android:bc13d45beb7678885e23e7",
+        "android_client_info": {
+          "package_name": "com.example.liveeasy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495154153254-ttrfeb3t34cgpd7l7h45dgbe407fbaob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.liveeasy",
+            "certificate_hash": "f4b3bf021244b16e0f9d0cd40a177c0998c986c4"
+          }
+        },
+        {
+          "client_id": "495154153254-sflpddu4n2fve9sbck7cnpl57dcc18gc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBduiMg2h4cbXxgWCccOUohNM9QM-97Ss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495154153254-sflpddu4n2fve9sbck7cnpl57dcc18gc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
