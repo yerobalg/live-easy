@@ -66,13 +66,6 @@ public class InsertMedActivity extends AppCompatActivity {
         String price = binding.priceEditText.getText().toString();
         String quantity = binding.qtyEditText.getText().toString();
         String imageName = binding.imageEditText.getText().toString();
-        if(bitmap != null)
-            imageName = Timestamp.addTimestampToImage(
-                    binding.imageEditText.getText().toString()
-            );
-
-
-
 
         String validationErrMsg = validateForm(name, price, quantity, imageName);
         if (!validationErrMsg.isEmpty()) {
@@ -84,6 +77,9 @@ public class InsertMedActivity extends AppCompatActivity {
             return;
         }
 
+        imageName = Timestamp.addTimestampToImage(
+                binding.imageEditText.getText().toString()
+        );
         upload(name, price, quantity, imageName);
     }
 

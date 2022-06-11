@@ -89,9 +89,8 @@ public class UpdateMedActivity extends AppCompatActivity {
         String name = binding.medEditText.getText().toString();
         String price = binding.priceEditText.getText().toString();
         String qty = binding.qtyEditText.getText().toString();
-        String image = Timestamp.addTimestampToImage(
-                binding.imageEditText.getText().toString()
-        );
+        String image = binding.imageEditText.getText().toString();
+
 
         String validationErrMsg;
         validationErrMsg = validateForm(name, price, qty, image, bitmap != null);
@@ -106,6 +105,9 @@ public class UpdateMedActivity extends AppCompatActivity {
         }
 
         if (bitmap != null) {
+            image = Timestamp.addTimestampToImage(
+                    binding.imageEditText.getText().toString()
+            );
             deleteImage(name, price, qty, med.getImage(), image);
         } else {
             updateData(name, price, qty, med.getImage());

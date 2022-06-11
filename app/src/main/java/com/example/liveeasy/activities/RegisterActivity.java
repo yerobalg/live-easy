@@ -25,6 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         mAuth = FirebaseAuth.getInstance();
         initProgressDialog();
 

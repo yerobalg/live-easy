@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                             getApplicationContext(),
                             MainActivity.class
                     ));
+                    finish();
                 });
     }
 
@@ -181,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(new Intent(
                             getApplicationContext(), MainActivity.class
                     ));
+                    finish();
                 });
     }
 }

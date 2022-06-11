@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private ProgressDialog progressDialog;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
