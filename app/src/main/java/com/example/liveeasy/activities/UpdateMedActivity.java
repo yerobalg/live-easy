@@ -124,7 +124,6 @@ public class UpdateMedActivity extends AppCompatActivity {
         if (isWithImage && image.isEmpty())
             return "Please fill the image name";
         return "";
-
     }
 
     private void deleteImage(

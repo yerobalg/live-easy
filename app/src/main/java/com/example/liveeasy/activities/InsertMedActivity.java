@@ -57,19 +57,22 @@ public class InsertMedActivity extends AppCompatActivity {
         if (bitmap == null)
             return "Please upload an image";
         if (!imageName.contains(".jpeg") && !imageName.contains(".jpg") && !imageName.contains(".png"))
-            return "Image and image name must be in jpeg, jpg, or png format";
+            return "image name must be in jpeg, jpg, or png format";
         return "";
     }
-
-
 
     private void insert() {
         String name = binding.medEditText.getText().toString();
         String price = binding.priceEditText.getText().toString();
         String quantity = binding.qtyEditText.getText().toString();
-        String imageName = Timestamp.addTimestampToImage(
-                binding.imageEditText.getText().toString()
-        );
+        String imageName = binding.imageEditText.getText().toString();
+        if(bitmap != null)
+            imageName = Timestamp.addTimestampToImage(
+                    binding.imageEditText.getText().toString()
+            );
+
+
+
 
         String validationErrMsg = validateForm(name, price, quantity, imageName);
         if (!validationErrMsg.isEmpty()) {
